@@ -7,15 +7,15 @@ Sign In With Solana (SIWS) is a new feature that lets dapps authenticate their u
 Phantom is pioneering support for SIWS alongside the Solana Wallet Standard. The [technical specification](https://github.com/solana-labs/wallet-standard/blob/alpha/packages/core/features/src/signIn.ts) for SIWS is modeled after [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) (Sign In With Ethereum) but extends beyond it’s capabilities. SIWS shifts the responsibility of message construction from dapps to the wallet, resulting in consistent, user-friendly interfaces and enhanced end-user security.
 
 <p float="middle">
-  <img src="./assets/intro1.png" alt="drawing" width="400"/>
-  <img src="./assets/intro2.png" alt="drawing" width="400"/>
+  <img src="./assets/intro1.png" alt="drawing" height="600"/>
+  <img src="./assets/intro2.png" alt="drawing" height="600"/>
 </p>
 
 With SIWS, wallets can scrutinize message data to ensure its legitimacy or raise red flags for suspicious activity. Domain binding is a key feature of SIWS, enabling wallets to alert users if a website is impersonating another entity
 
 <p float="middle">
-  <img src="./assets/intro3.png" alt="drawing" width="400"/>
-  <img src="./assets/intro4.png" alt="drawing" width="400"/>
+  <img src="./assets/intro3.png" alt="drawing" height="600"/>
+  <img src="./assets/intro4.png" alt="drawing" height="600"/>
 </p>
 
 # Specification
@@ -181,7 +181,7 @@ SIWS comes with first-class support in both the Solana Wallet Standard and Solan
 
 # Reference API
 
-- issuedAT — the time at which wahateve, — Phantom currently accepts _+10 min but subject to chagne
+- `issuedAt`` — the time at which wahateve, — Phantom currently accepts _+10 min but subject to change
 - In addition to using `nonce` to avoid replay attacks, dapps can also choose to include a unique signature in the `requestId` . Once the wallet returns the signed message, dapps can then verify this signature against the state to add an additional, strong layer of security.
 
 # Dependencies
