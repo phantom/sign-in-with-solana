@@ -1,5 +1,23 @@
 # Sign-In With Solana
 
+* [Introduction](#introduction)
+* [Motivation](#motivation)
+* [Specification](#specification)
+  * [Sign-In Input Fields](#sign-in-input-fields)
+  * [Sign-In Output Fields](#sign-in-output-fields)
+  * [ABNF Message Format](#abnf-message-format)
+  * [Minimal Message Template](#minimal-message-template)
+  * [Maximal Message Template](#maximal-message-template)
+* [Dapp Integration](#dapp-integration)
+  * [Overview](#overview)
+  * [Integration Steps](#integration-steps)
+* [Wallet Integration Guide](#wallet-integration-guide)
+  * [Overview](#overview-1)
+* [Best Practices](#best-practices)
+* [Dependencies](#dependencies)
+* [Full Feature Demo](#full-feature-demo)
+* [Reference Implementation](#reference-implementation) 
+
 ## Introduction
 
 Sign In With Solana (SIWS) is a new feature that lets applications authenticate their users and prove ownership of their addresses. The feature aims at standardizing message formats to improve the authentication UX and security, and replaces the traditionally clunky `connect` + `signMessage` flow with a one-click `signIn` method.
@@ -35,7 +53,7 @@ To make a sign-in request, dapps do not need to construct a message themselves, 
 - `issuedAt`: Optional ISO 8601 datetime string. This represents the time at which the sign-in request was issued to the wallet. If not provided, the wallet must not include Issued At in the message.
 - `expirationTime`: Optional ISO 8601 datetime string. This represents the time at which the sign-in request should expire. If not provided, the wallet must not include Expiration Time in the message.
 - `notBefore`: Optional ISO 8601 datetime string. This represents the time at which the sign-in request becomes valid. If not provided, the wallet must not include Not Before in the message.
-- `requestId`: Optional EIP-4361 Request ID. This field can be used to provide uniqueness or an identifier to the sign-in request, and can be used by dapps as an extra layer of request verification. If not provided, the wallet must not include Request ID in the message.
+- `requestId`: Optional EIP-4361 Request ID. In addition to using `nonce` to avoid replay attacks, dapps can also choose to include a unique signature in the `requestId` . Once the wallet returns the signed message, dapps can then verify this signature against the state to add an additional, strong layer of security. If not provided, the wallet must not include Request ID in the message.
 - `resources`: Optional EIP-4361 Resources. Usually a list of references in the form of URIs that the dapp wants the user to be aware of. These URIs should be separated by `\n-`, ie, URIs in new lines starting with the character `-`. If not provided, the wallet must not include Resources in the message.
     
 ### Sign-In Output Fields
@@ -186,11 +204,6 @@ SIWS comes with first-class support in both the Solana Wallet Standard and Solan
 - In a production application, both `SolanaSignInInput` generation and `SolanaSignInOutput` verification **should happen** **server-side**. Client-side verification should not be relied upon due to its inherent security flaws. Developers can make use of the asynchronous nature of the `autoSignIn` callback to make a request to the server to obtain SIWS params, and make another request to the server to perform verification of the SIWS input and output.
 - When generating `SolanaSignInInput`, developers should include as many fields as possible. Each field adds an extra layer of security to protect users against various forms of attacks. Examples of these fields include `nonce`, `chainId`, `issuedAt`, `expirationTime`, and `requestId`.
 
-## Reference API
-
-- `issuedAt`` — the time at which wahateve, — Phantom currently accepts _+10 min but subject to change
-- In addition to using `nonce` to avoid replay attacks, dapps can also choose to include a unique signature in the `requestId` . Once the wallet returns the signed message, dapps can then verify this signature against the state to add an additional, strong layer of security.
-
 ## Dependencies
 These dependencies need to be added to your `package.json`:
 
@@ -214,8 +227,6 @@ The following configs will be important while testing as some packages like `@so
   "@solana/wallet-adapter-base": "0.9.23"
 }
 ```
-
-
 
 ## Full Feature Demo
 
