@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Start a Discussion
+    url: https://github.com/orgs/phantom/discussions/categories/general
+    about: Ask questions and discuss with other community members
+  - name: Get Developer Support
+    url: https://github.com/orgs/phantom/discussions/categories/help-support
+    about: Get developer support from the Phantom dev community
