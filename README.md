@@ -40,8 +40,9 @@ A decentralised authentication approach widely used to tackle the above revolves
 1.  The user experience is inconsistent, as every dapp has its unique message format, leaving users unsure of what to expect
 2. The lack of standardization in message formats forces wallets to display confusing messages in plaintext, further baffling users
 3. Malicious websites pretending as legitimate dapps can trick users into signing messages, and neither the wallet nor the user can intervene
+4. The traditional `connect` + `signMessage` requires multiple unintuitive steps
 
-Sign-In With Solana offers a comprehensive solution to these challenges and more. The [technical specification](https://github.com/solana-labs/wallet-standard/blob/alpha/packages/core/features/src/signIn.ts) for SIWS is modeled after [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) (Sign In With Ethereum) but extends beyond it’s capabilities. SIWS shifts the responsibility of message construction from dapps to the wallet, resulting in consistent, user-friendly inlterfaces and enhanced end-user security.
+Sign-In With Solana offers a comprehensive solution to these challenges and more. The [technical specification](https://github.com/solana-labs/wallet-standard/blob/alpha/packages/core/features/src/signIn.ts) for SIWS is modeled after [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) (Sign In With Ethereum) but extends beyond its capabilities. SIWS shifts the responsibility of message construction from dapps to the wallet, resulting in consistent, user-friendly interfaces and enhanced end-user security.
 
 Additionally, SIWS standardises the message format, which enables wallets to scrutinize message data to ensure its legitimacy or raise red flags for suspicious activity. Domain binding is a key feature of SIWS, enabling wallets to alert users if a website is impersonating another entity
 
@@ -54,7 +55,7 @@ To make a sign-in request, dapps do not need to construct a message themselves, 
 - `address`: Optional Solana address performing the sign-in. The address is case-sensitive. If not provided, the wallet must determine the Address to include in the message.
 - `statement`: Optional EIP-4361 Statement. The statement is a human readable string and should not have new-line characters (`\n`). If not provided, the wallet must not include Statement in the message.
 - `uri`: Optional EIP-4361 URI. The URL that is requesting the sign-in. If not provided, the wallet must not include URI in the message.
-- `version`: Optional EIP-4361 version, hardcoded to `1` if provided in the current spec. If not provided, the wallet must not include Version in the message.
+- `version`: Optional EIP-4361 version. If not provided, the wallet must not include Version in the message.
 - `chainId`: Optional EIP-4361 Chain ID. The chainId can be one of the following: `mainnet`, `testnet`, `devnet`, `localnet`, `solana:mainnet`, `solana:testnet`, `solana:devnet`. If not provided, the wallet must not include Chain ID in the message.
 - `nonce`: Optional EIP-4361 Nonce. It should be an alphanumeric string containing a minimum of 8 characters. If not provided, the wallet must not include Nonce in the message.
 - `issuedAt`: Optional ISO 8601 datetime string. This represents the time at which the sign-in request was issued to the wallet. Note: For Phantom, issuedAt has a threshold and it should be within +- 10 minutes from the timestamp at which verification is taking place. If not provided, the wallet must not include Issued At in the message.
@@ -69,7 +70,7 @@ Once the user is successfully signed-in, the wallet returns back the `signInOutp
 - `account` [`WalletAccount`]: Account that was signed in. The address of the account may be different from the provided input Address.
 - `signedMessage` [`Uint8Array`]: Message bytes that were signed. The wallet is responsible for constructing this message using the `signInInput`.
 - `signature` [`Uint8Array`]: Message signature produced. If the signature type is provided, the signature must be Ed25519.
-- `signatureType` [`ed25519`]: Optional type of the message signature produced. If not provided, the signature must be Ed25519.
+- `signatureType` [`"ed25519"`]: Optional type of the message signature produced. If not provided, the signature must be Ed25519.
 
 ### ABNF Message Format
 The Sign-In With Solana message constructed by the wallet using `signInInput` should follow the `sign-in-with-solana` Augment Backus–Naur Form expression:
@@ -139,12 +140,12 @@ Resources:
 ## Dapp Integration
 SIWS comes with first-class support in both the Solana Wallet Standard and Solana Wallet Adapter libraries. If your dapp makes use of the Solana Wallet Adapter, migration is easy.
 ### Overview
-1. User chooses one of the standard wallets (wallet standard compatible wallets)
+1. User chooses one of the standard wallets (Wallet Standard compatible wallets)
 2. Dapp checks if the given wallet has the signIn feature enabled
 3. If not, Dapp continues with the legacy authentication mechanism using connect + signMessage
 4. Else, Dapp constructs the signInInput which is an object containing a set of standard message parameters as defined in the spec.
 5. The Dapp sends this object to the Wallet and requests signIn
-6. The Dapp receieves the constructed message, the message signature and the public address of the connected account from the Wallet
+6. The Dapp receives the constructed message, the message signature and the public address of the connected account from the Wallet
 7. The Dapp verifies the returned message and the signature against the signInInput provided to the Wallet. This verification happens server-side
 8. On successful verification, the authentication process is completed and the user is connected and authenticated to the Dapp
 
@@ -156,20 +157,6 @@ The first step is to update the necessary dependencies. Add/update these in your
 "@solana/wallet-adapter-react": "0.15.34",
 "@solana/wallet-standard-features": "1.1.0",
 "@solana/wallet-standard-util": "1.1.0",
-```
-
-The following configs will be important while testing as some packages like `@solana/wallet-adapter-material-ui` and `@solana/wallet-adapter-react-ui` use older versions of the react and base packages and may cause conflicts.
-
-```json
-"resolutions": {
-  "@solana/wallet-adapter-react": "0.15.34",
-  "@solana/wallet-adapter-base": "0.9.23"
-  
-},
-"overrides": {
-  "@solana/wallet-adapter-react": "0.15.34",
-  "@solana/wallet-adapter-base": "0.9.23"
-}
 ```
 
 ### Sign-In Input Generation (Backend)
@@ -186,6 +173,10 @@ export const createSignInData = async (): Promise<SolanaSignInInput> => {
 
   // Convert the Date object to a string
   const currentDateTime = now.toISOString();
+  
+  // signInData can be kept empty in most cases: all fields are optional
+  // const signInData: SolanaSignInInput = {};
+
   const signInData: SolanaSignInInput = {
     domain,
     statement: "Clicking Sign or Approve only means you have proved this wallet is owned by you. This request will not trigger any blockchain transaction or cost any gas fee.",
@@ -197,7 +188,6 @@ export const createSignInData = async (): Promise<SolanaSignInInput> => {
   };
 
   return signInData;
-  // signInData can be kept empty as well as all the fields are optional
 };
 ```
 
@@ -215,7 +205,7 @@ const verified = nacl
   )
 ```
 
-Sign-In With Solana brings about a dev-ex improvement with a helper method implementation for message and signature verification: [`verifySignIn`](https://github.com/solana-labs/wallet-standard/blob/master/packages/core/util/src/signIn.ts#L8) method of the `@solana/wallet-standard-util` package. Under-the-hood, the `verifySignIn` method:
+Sign-In With Solana brings about a developer experience improvement with a helper method implementation for message and signature verification: [`verifySignIn`](https://github.com/solana-labs/wallet-standard/blob/master/packages/core/util/src/signIn.ts#L8) method of the `@solana/wallet-standard-util` package. Under-the-hood, the `verifySignIn` method:
 1. parses and deconstructs the `signedMessage` field of the `output` (ie, the constructed message returned by the wallet)
 2. checks the extracted fields against the fields in the `input`
 3. re-constructs the message according to the ABNF Message Format
