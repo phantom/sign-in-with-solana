@@ -458,8 +458,7 @@ export function verify(data: SolanaSignInInput, opts: VerificationOptions) {
 ```
 
 ## Full Feature Demo
-
-<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/228d2a4820fb44f69fb10c4fb5f2b55a?sid=6eb7bd38-69cd-47c7-ae6c-a1aa4713809d" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+[https://www.loom.com/share/228d2a4820fb44f69fb10c4fb5f2b55a](https://www.loom.com/share/228d2a4820fb44f69fb10c4fb5f2b55a)
 
 ## Reference Implementation
 You can find the source code for the example implementation [here](https://github.com/phantom/sign-in-with-solana/tree/main/example-dapp).
