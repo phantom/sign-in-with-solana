@@ -384,7 +384,7 @@ export function createSignInMessageText(input: SolanaSignInInput): string {
 ```
 
 ### Message Parsing
-Message parsing can be made easy and manageable using an ABNF Parser Generator like apg-js: (!https://github.com/ldthomas/apg-js).
+Message parsing can be made easy and manageable using an ABNF Parser Generator like apg-js: [https://github.com/ldthomas/apg-js](https://github.com/ldthomas/apg-js).
 
 Wallets can create BNF grammar files and the `apg-js` packages recursively generates parsers for the constructed message.
 
