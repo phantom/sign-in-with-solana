@@ -43,7 +43,7 @@ A decentralised authentication approach widely used to tackle the above revolves
 3. Malicious websites pretending to be legitimate dapps can trick users into signing messages, and neither the wallet nor the user can intervene
 4. The traditional `connect` + `signMessage` requires multiple unintuitive steps
 
-Sign In With Solana offers a comprehensive solution to these challenges and more. The [technical specification](https://github.com/solana-labs/wallet-standard/blob/alpha/packages/core/features/src/signIn.ts) for SIWS is modeled after [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) (Sign In With Ethereum) but extends beyond its capabilities. SIWS shifts the responsibility of message construction from dapps to the wallet, resulting in consistent, user-friendly interfaces and enhanced end-user security.
+Sign In With Solana offers a comprehensive solution to these challenges and more. The [technical specification](#specification) for SIWS is modeled after [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) (Sign In With Ethereum) but extends beyond its capabilities. SIWS shifts the responsibility of message construction from dapps to the wallet, resulting in consistent, user-friendly interfaces and enhanced end-user security.
 
 Additionally, SIWS standardises the message format, which enables wallets to scrutinize message data to ensure its legitimacy or raise red flags for suspicious activity. Domain binding is a key feature of SIWS, enabling wallets to alert users if a website is impersonating another entity
 
