@@ -72,7 +72,7 @@ Once the user is successfully signed-in, the wallet returns back the `signInOutp
 
 - `account` [`WalletAccount`]: Account that was signed in. The address of the account may be different from the provided input Address.
 - `signedMessage` [`Uint8Array`]: Message bytes that were signed. The wallet is responsible for constructing this message using the `signInInput`.
-- `signature` [`Uint8Array`]: Message signature produced. If the signature type is provided, the signature must be Ed25519.
+- `signature` [`Uint8Array`]: Message signature produced. If the signature type is not provided, the signature must be Ed25519.
 - `signatureType` [`"ed25519"`]: Optional type of the message signature produced. If not provided, the signature must be Ed25519.
 
 ### ABNF Message Format
