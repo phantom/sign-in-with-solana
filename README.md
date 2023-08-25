@@ -262,9 +262,17 @@ const autoSignIn = useCallback(async (adapter: Adapter) => {
   const output = await adapter.signIn(input);
 
   // Verify the sign-in output against the generated input server-side
+  let strPayload = JSON.stringify({ input, output: {
+    account: {
+      address: output.account.address,
+      publicKey: Array.from(output.account.publicKey),
+    },
+    signature: Array.from(output["signature"]),
+    signedMessage: Array.from(output["signedMessage"]),
+  } });
   const verifyResponse = await fetch("/backend/verifySIWS", {
     method: "POST",
-    body: JSON.stringify({ input, output }),
+    body: strPayload,
   });
   const success = await verifyResponse.json();
 

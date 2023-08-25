@@ -1,5 +1,5 @@
 {
-  "name": "@0xproflupin/example-dapp",
+  "name": "@phantom/sign-in-with-solana",
   "version": "1.0.0",
   "description": "Reference implementation of Sign-In With Solana",
   "license": "MIT",
@@ -16,16 +16,17 @@
   ],
   "dependencies": {
     "@solana/wallet-adapter-ant-design": "^0.11.28",
-    "@solana/wallet-adapter-base": "0.9.23-alpha.3",
+    "@solana/wallet-adapter-base": "0.9.23",
     "@solana/wallet-adapter-material-ui": "^0.16.30",
-    "@solana/wallet-adapter-react": "0.15.34-alpha.3",
+    "@solana/wallet-adapter-react": "0.15.34",
     "@solana/wallet-adapter-react-ui": "^0.9.31",
-    "@solana/wallet-standard-features": "1.1.0-alpha.5",
-    "@solana/wallet-standard-util": "1.1.0-alpha.10",
+    "@solana/wallet-standard-features": "1.1.0",
+    "@solana/wallet-standard-util": "1.1.0",
     "@solana/web3.js": "1.63.1",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@@wallet-standard/base": "1.0.1",
     "bs58": "^5.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -68,14 +69,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "resolutions": {
-    "@solana/wallet-adapter-react": "0.15.34-alpha.3",
-    "@solana/wallet-adapter-base": "0.9.23-alpha.3"
-    
-  },
-  "overrides": {
-    "@solana/wallet-adapter-react": "0.15.34-alpha.3",
-    "@solana/wallet-adapter-base": "0.9.23-alpha.3"
-  }
+  ]
 }

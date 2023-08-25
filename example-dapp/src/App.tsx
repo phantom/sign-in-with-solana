@@ -225,9 +225,34 @@ const App = () => {
   const autoSignIn = useCallback(async (adapter: Adapter) => {
     if (!('signIn' in adapter)) return true;
 
+    // Fetch the signInInput from the backend
+    /*
+    const createResponse = await fetch("/backend/createSignInData");
+    const input: SolanaSignInInput = await createResponse.json();
+    */
     const input: SolanaSignInInput = await createSignInData();
+
+    // Send the signInInput to the wallet and trigger a sign-in request
     const output = await adapter.signIn(input);
 
+    // Verify the sign-in output against the generated input server-side
+    /*
+    let strPayload = JSON.stringify({ input, output: {
+      account: {
+        address: output.account.address,
+        publicKey: Array.from(output.account.publicKey),
+      },
+      signature: Array.from(output["signature"]),
+      signedMessage: Array.from(output["signedMessage"]),
+    } });
+    const verifyResponse = await fetch("/backend/verifySIWS", {
+      method: "POST",
+      body: strPayload,
+    });
+    const success = await verifyResponse.json();
+    */
+
+    // For demonstration purposes only, this should happen server-side
     if (!verifySignIn(input, output)) {
       console.error('Sign In verification failed!')
       throw new Error('Sign In verification failed!');
