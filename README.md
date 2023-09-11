@@ -237,7 +237,15 @@ export function verifySIWS(
   input: SolanaSignInInput,
   output: SolanaSignInOutput
 ): boolean {
-  return verifySignIn(input, output);
+  const serialisedOutput: SolanaSignInOutput = {
+    account: {
+      address: output.account.address,
+      publicKey: new Uint8Array(output.account.publicKey),
+    },
+    signature: new Uint8Array(output["signature"]),
+    signedMessage:  new Uint8Array(output["signedMessage"]),
+  }; 
+  return verifySignIn(input, serialisedOutput);
 }
 ```
 

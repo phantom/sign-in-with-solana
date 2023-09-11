@@ -259,12 +259,19 @@ const App = () => {
     }
 
     return false;
-}, []);
+  }, []);
+
+  const autoConnect = useCallback(async (adapter: Adapter) => {
+    adapter.autoConnect().catch((e) => {
+      return autoSignIn(adapter);
+    });
+    return false;
+  }, [autoSignIn]);
 
   return (
     <AutoConnectProvider>
       <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} autoConnect={autoSignIn}>
+        <WalletProvider wallets={wallets} autoConnect={autoConnect}>
           <WalletModalProvider>
             <StatelessApp />
           </WalletModalProvider>
