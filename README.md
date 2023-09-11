@@ -239,12 +239,12 @@ export function verifySIWS(
 ): boolean {
   const serialisedOutput: SolanaSignInOutput = {
     account: {
-      address: output.account.address,
       publicKey: new Uint8Array(output.account.publicKey),
+      ...output.account
     },
-    signature: new Uint8Array(output["signature"]),
-    signedMessage:  new Uint8Array(output["signedMessage"]),
-  }; 
+    signature: new Uint8Array(output.signature),
+    signedMessage: new Uint8Array(output.signedMessage),
+  };
   return verifySignIn(input, serialisedOutput);
 }
 ```
@@ -270,14 +270,7 @@ const autoSignIn = useCallback(async (adapter: Adapter) => {
   const output = await adapter.signIn(input);
 
   // Verify the sign-in output against the generated input server-side
-  let strPayload = JSON.stringify({ input, output: {
-    account: {
-      address: output.account.address,
-      publicKey: Array.from(output.account.publicKey),
-    },
-    signature: Array.from(output["signature"]),
-    signedMessage: Array.from(output["signedMessage"]),
-  } });
+  let strPayload = JSON.stringify({ input, output });
   const verifyResponse = await fetch("/backend/verifySIWS", {
     method: "POST",
     body: strPayload,

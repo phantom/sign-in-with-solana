@@ -4,7 +4,7 @@ import { useWallet, WalletProvider, ConnectionProvider } from '@solana/wallet-ad
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import type { Adapter } from '@solana/wallet-adapter-base';
-import { type SolanaSignInInput } from '@solana/wallet-standard-features';
+import type { SolanaSignInInput, SolanaSignInOutput } from '@solana/wallet-standard-features';
 import { verifySignIn } from '@solana/wallet-standard-util';
 
 import {
@@ -234,17 +234,10 @@ const App = () => {
 
     // Send the signInInput to the wallet and trigger a sign-in request
     const output = await adapter.signIn(input);
+    const constructPayload = JSON.stringify({input, output});
 
     // Verify the sign-in output against the generated input server-side
     /*
-    let strPayload = JSON.stringify({ input, output: {
-      account: {
-        address: output.account.address,
-        publicKey: Array.from(output.account.publicKey),
-      },
-      signature: Array.from(output["signature"]),
-      signedMessage: Array.from(output["signedMessage"]),
-    } });
     const verifyResponse = await fetch("/backend/verifySIWS", {
       method: "POST",
       body: strPayload,
@@ -252,11 +245,24 @@ const App = () => {
     const success = await verifyResponse.json();
     */
 
-    // For demonstration purposes only, this should happen server-side
-    if (!verifySignIn(input, output)) {
+    /* ------------------------------------ BACKEND ------------------------------------ */
+    // "/backend/verifySIWS" endpoint, `constructPayload` receieved
+    const deconstructPayload: { input: SolanaSignInInput; output: SolanaSignInOutput } = JSON.parse(constructPayload);
+    const backendInput = deconstructPayload.input;
+    const backendOutput: SolanaSignInOutput = {
+      account: {
+        publicKey: new Uint8Array(output.account.publicKey),
+        ...output.account
+      },
+      signature: new Uint8Array(output.signature),
+      signedMessage: new Uint8Array(output.signedMessage),
+    };
+
+    if (!verifySignIn(backendInput, backendOutput)) {
       console.error('Sign In verification failed!')
       throw new Error('Sign In verification failed!');
     }
+    /* ------------------------------------ BACKEND ------------------------------------ */
 
     return false;
   }, []);
