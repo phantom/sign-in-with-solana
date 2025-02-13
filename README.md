@@ -255,7 +255,6 @@ Add the following `autoSignIn` callback method to your `ContextProvider`:
 
 ```tsx
 import { type SolanaSignInInput } from "@solana/wallet-standard-features";
-import { verifySignIn } from "@solana/wallet-standard-util";
 
 const autoSignIn = useCallback(async (adapter: Adapter) => {
   // If the signIn feature is not available, return true
