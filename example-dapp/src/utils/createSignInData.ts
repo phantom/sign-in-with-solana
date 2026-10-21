@@ -1,41 +1,27 @@
-import { SolanaSignInInput } from "@solana/wallet-standard-features";
+import type { SolanaSignInInput } from '@solana/wallet-standard-features';
 
+/** Browser playground only. Authentication challenges must come from a backend. */
 export const createSignInData = async (): Promise<SolanaSignInInput> => {
-  const now: Date = new Date();
-  const uri = window.location.href
-  const currentUrl = new URL(uri);
-  const domain = currentUrl.host;
-
-  // Convert the Date object to a string
-  const currentDateTime = now.toISOString();
-  const signInData: SolanaSignInInput = {
-    domain,
-    statement: "Clicking Sign or Approve only means you have proved this wallet is owned by you. This request will not trigger any blockchain transaction or cost any gas fee.",
-    version: "1",
-    nonce: "oBbLoEldZs",
-    chainId: "mainnet",
-    issuedAt: currentDateTime,
-    resources: ["https://example.com", "https://phantom.app/"],
+  const now = Date.now();
+  const origin = new URL(window.location.href);
+  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)), byte =>
+    byte.toString(16).padStart(2, '0')
+  ).join('');
+  return {
+    domain: origin.host,
+    uri: origin.origin,
+    statement: 'Demonstrate wallet ownership. This does not create an application session or authorize a transaction.',
+    version: '1',
+    nonce,
+    chainId: 'solana:mainnet',
+    issuedAt: new Date(now).toISOString(),
+    expirationTime: new Date(now + 5 * 60 * 1000).toISOString(),
   };
-
-  return signInData;
 };
 
-export const createSignInErrorData = async (): Promise<SolanaSignInInput> => {
-  const now: Date = new Date();
-
-  // Convert the Date object to a string
-  const currentDateTime = now.toISOString();
-  const signInData: SolanaSignInInput = {
-    domain: "phishing.com",
-    statement: "Sign-in to connect!",
-    uri: "https://www.phishing.com",
-    version: "1",
-    nonce: "oBbLoEldZs",
-    chainId: "solana:mainnet",
-    issuedAt: currentDateTime,
-    resources: ["https://example.com", "https://phantom.app/"]
-  };
-
-  return signInData;
-};
+/** Deliberately invalid origin for checking the wallet's phishing protection. */
+export const createSignInErrorData = async (): Promise<SolanaSignInInput> => ({
+  ...await createSignInData(),
+  domain: 'phishing.invalid',
+  uri: 'https://phishing.invalid',
+});

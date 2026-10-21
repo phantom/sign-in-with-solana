@@ -1,6 +1,10 @@
 # Dependencies
 node_modules
 
+# Generated build and test output
+build/
+coverage/
+
 # MacOS
 .DS_Store
 

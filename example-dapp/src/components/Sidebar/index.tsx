@@ -1,7 +1,6 @@
 import React from 'react';
 import { PublicKey } from '@solana/web3.js';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 import { GRAY, REACT_GRAY, PURPLE, WHITE, DARK_GRAY } from '../../constants';
@@ -132,51 +131,6 @@ const Tag = styled.p`
   }
 `;
 
-const NavigationLink = styled(NavLink)`
-  display: block;
-  color: ${GRAY};
-  text-decoration: none;
-  margin-bottom: 5px;
-  font-size: 14px;
-  padding: 8px;
-  width: 100%;
-  background-color: ${hexToRGB(PURPLE, 0.2)};
-  border-radius: 6px;
-  box-sizing: border-box;
-  text-align: center;
-
-  &.active {
-    font-weight: bold;
-    color: ${PURPLE};
-  }
-
-  &:hover {
-    color: ${PURPLE};
-  }
-`;
-
-const MenuButton = styled.button`
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  width: 200px;
-  background-color: ${PURPLE};
-  color: ${WHITE};
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  &:hover {
-    background-color: ${hexToRGB(PURPLE, 0.8)};
-  }
-`;
-
-const MenuContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-  width: 200px;
-`;
-
-const Menu = styled.div``;
 
 // =============================================================================
 // Typedefs
@@ -185,7 +139,6 @@ const Menu = styled.div``;
 interface Props {
   publicKey?: PublicKey;
   connectedMethods: ConnectedMethods[];
-  connect: () => Promise<void>;
 }
 
 // =============================================================================
@@ -194,19 +147,14 @@ interface Props {
 
 const Sidebar = React.memo((props: Props) => {
   const { publicKey, connectedMethods } = props;
-  const [menuOpen, setMenuOpen] = React.useState(false);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
   return (
     <Main>
       <Body>
         <Link>
           <img src="/images/phantom-icon-purple.png" alt="Phantom" width="75" />
         </Link>
-        <WalletMultiButton />  
+        <Tag>Browser playground only. No authenticated server session is created.</Tag>
+        <WalletMultiButton />
         {publicKey ? (
           // connected
           <>
